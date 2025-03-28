@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Files</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <nav class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <span class="text-xl font-semibold text-gray-800">File Uploader</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="index.html" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">Home</a>
+          <a href="upload.html" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">Upload</a>
+          <a href="files.html" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">Files</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Upload Files</h1>
+    
+    <div id="drop-area" class="border-2 border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+      <div class="flex flex-col items-center justify-center">
+        <i class="fas fa-cloud-upload-alt text-5xl text-blue-500 mb-4"></i>
+        <p class="text-xl font-medium">Drag & Drop files here</p>
+        <p class="text-gray-500 mt-2">or</p>
+        <input type="file" id="fileElem" multiple class="hidden" accept="*/*">
+        <button id="browseBtn" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+          Browse Files
+        </button>
+      </div>
+    </div>
+
+    <div id="progress-container" class="mt-8 hidden">
+      <h3 class="text-lg font-medium mb-2">Upload Progress</h3>
+      <div id="file-list" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <script>
+    const dropArea = document.getElementById('drop-area');
+    const fileElem = document.getElementById('fileElem');
+    const browseBtn = document.getElementById('browseBtn');
+    const progressContainer = document.getElementById('progress-container');
+    const fileList = document.getElementById('file-list');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // Highlight drop area when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+      dropArea.classList.add('border-blue-500', 'bg-blue-50');
+    }
+
+    function unhighlight() {
+      dropArea.classList.remove('border-blue-500', 'bg-blue-50');
+    }
+
+    // Handle dropped files
+    dropArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleFiles(files);
+    }
+
+    // Handle selected files
+    browseBtn.addEventListener('click', () => fileElem.click());
+    fileElem.addEventListener('change', () => handleFiles(fileElem.files));
+
+    // Process files and upload
+    function handleFiles(files) {
+      if (!files.length) return;
+      
+      progressContainer.classList.remove('hidden');
+      fileList.innerHTML = '';
+
+      [...files].forEach(file => {
+        uploadFile(file);
+      });
+    }
+
+    // Upload file to server
+    function uploadFile(file) {
+      const formData = new FormData();
+      formData.append('files', file);
+
+      const fileItem = document.createElement('div');
+      fileItem.className = 'bg-white p-4 rounded-lg shadow-sm';
+      fileItem.innerHTML = `
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-medium truncate">${file.name}</span>
+          <span class="text-sm text-gray-500">${formatFileSize(file.size)}</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div id="progress-${file.name}" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+        </div>
+        <div class="flex justify-between mt-1">
+          <span id="status-${file.name}" class="text-xs text-gray-500">Pending</span>
+          <span id="percent-${file.name}" class="text-xs text-gray-500">0%</span>
+        </div>
+      `;
+      fileList.appendChild(fileItem);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/upload', true);
+
+      xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+          const percentComplete = Math.round((e.loaded / e.total) * 100);
+          document.getElementById(`progress-${file.name}`).style.width = percentComplete + '%';
+          document.getElementById(`percent-${file.name}`).textContent = percentComplete + '%';
+          document.getElementById(`status-${file.name}`).textContent = 'Uploading...';
+        }
+      };
+
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          document.getElementById(`status-${file.name}`).textContent = 'Uploaded';
+          document.getElementById(`status-${file.name}`).classList.add('text-green-500');
+        } else {
+          document.getElementById(`status-${file.name}`).textContent = 'Error';
+          document.getElementById(`status-${file.name}`).classList.add('text-red-500');
+        }
+      };
+
+      xhr.send(formData);
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+  </script>
+</body>
+</html>
