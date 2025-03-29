@@ -1,0 +1,79 @@
+1 =>  Microsoft Certified Systems Engineer (MCSE)
+
+
+
+Pass:thanedesktop.support@sbigeneral.in
+Th@ne$upp2025!
+
+**********************
+https://172.16.141.160/sc2.jsp
+
+ips:
+\\10.22.104.224\d$
+
+=======================EXT number=====================
+1750 -> Guwahati EXT.
+6296457528 -> Durgapur BOM -> call at 11am
+7208959701 -> binekar
+7555 -> Hyderabad II
+4438 -> Hyderabad I -> mohan paruchuri
+9964446905 -> Hubli
+7208 -> kolapur (Dawood)
+8976965238 -> Vizag
+4304 -> bangluru
+11051 -> pattern durgesh ?
+3900 -> Dehradun
+5516 -> Ranchi
+3206 -> punit joshi (amdabad)
+
+
+==============================Bhai log ka ext=================================
+2714 -> service desk Lead
+2965 -> amit bhai ~ Team Lead
+2924 -> komal
+2921 -> sayad
+36038/36271 /36050 -> help desk
+3206 -> punit joshi
+==============================User ext/number=================================
+ 
+9824 -> 10.24.0.87      -> Swapnil
+
+8806289538
+===============================User IP's=================================
+
+Admin@123 -> Sravan  30485 -> 4:30 pm
+
+Policy@123 -> Krishnandu  30465 -> bom not responces
+
+
+
+
+
+************************[ registory ]********************************
+Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control -> ServicesPipeTimeout 180000(decimal)
+Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mpssvc -> start 2(decimal)
+***********************************************************
+
+=======================================dailog===========================================================
+Dear User,
+We tried to call you but you didn't answer our call and
+kindly call us back as per your availability on this EXT Num: 2995
+
+
+
+
+
+laptop have multiple issues as user have accident 
+and laptop were in bag and laptop got damaged unintentionally by accident.
+
+shanbaji nagar : 206434549
+Admin@121
+Name-Mangesh Shinde
+Primary Contact no: 7208959779
+Email: thanedesktop.support@sbigeneral.in
+ALT Contact 8591409077
+Alt Email :  shamal.tupe@sbigeneral.in
+
+
+30328
+but we need to optimize one which is header and footer that render everytime so make an 
